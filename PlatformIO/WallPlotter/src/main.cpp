@@ -34,8 +34,8 @@ hw_timer_t *timerJoy = NULL;
 portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 portMUX_TYPE timerJoyMux = portMUX_INITIALIZER_UNLOCKED;
 
-const char *ssid = "Felicitas";
-const char *password = "felicitas2097.,.,";
+const char *ssid = "SSID";
+const char *password = "PASSWORD";
 
 const char *PARAM_INPUT_1 = "joy1PosX";
 const char *PARAM_INPUT_2 = "joy1PosY";
@@ -435,7 +435,7 @@ void setup()
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send_P(200, "text/html", index_html);
   });
-
+  /*
   // Send a GET request to <ESP_IP>/get?input1=<inputMessage>
   server.on("/get", HTTP_GET, [](AsyncWebServerRequest *request) {
     String inputMessage;
@@ -460,7 +460,7 @@ void setup()
     }
     Serial.println(inputMessage);
     request->send(200, "text/html", "HTTP GET request sent to your ESP on input field (" + inputParam + ") with value: " + inputMessage + "<br><a href=\"/\">Return to Home Page</a>");
-  });
+  });*/
   server.onNotFound(notFound);
   server.begin();
 
