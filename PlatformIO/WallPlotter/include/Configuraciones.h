@@ -28,7 +28,7 @@
 #define HOMING_MAXRPM_M1 100.0    //Máximas RPM Motor 1
 #define HOMING_MAXRPM_M2 100.0    //Máximas RPM Motor 2
 #define HOMING_X    250.0         //Posición de homing X
-#define HOMING_Y    10.0          //Posición de homing Y
+#define HOMING_Y    50.0          //Posición de homing Y
 #define D1 10                     //Diametro de tambor/carrete de motor 1 en mm
 #define D2 10                     //Diametro de tambor/carrete de motor 1 en mm
 #define OFFSET_DISPLAY 1          //Informar por puerto serie mediciones  X-Y de Joystick
