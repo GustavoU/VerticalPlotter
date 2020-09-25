@@ -15,8 +15,8 @@
 //Parámetros 
 #define LIM_INF_X 50              //Límite inferior de posicion Eje X - Por debajo de este valor no se moverán más los motores
 #define LIM_INF_Y 50              //Límite inferior de posicion Eje Y
-#define LIM_SUP_X 1000            //Límite superior de posición Eje X - Por encima de este valor no se moverán más los motores
-#define LIM_SUP_Y 1000            //Límite superior de posición Eje Y
+#define LIM_SUP_X 450            //Límite superior de posición Eje X - Por encima de este valor no se moverán más los motores
+#define LIM_SUP_Y 450            //Límite superior de posición Eje Y
 #define PPR_M1 200.0              //Pasos por revolución de Stepper X
 #define PPR_M2 200.0              //Pasos por revolución de Stepper Y
 #define RES_M1 (PI * D1 / PPR_M1) //Avance lineal mm por paso motor 1
@@ -38,4 +38,4 @@
 #define POSX_M2 500               //Posixion X del Motor 2. Se asumen los dos motores en Y=0 y el motor 1 en X1=0
 #define JOY_CENTER_X 1875.0       //Valor obtenido de la posicion central X del joystick luego de primera calibración
 #define JOY_CENTER_Y 1585.0       //Valor obtenido de la posicion central Y del joystick luego de primera calibración
-#define JOY_GAIN    2             //Ganancia de Joystick para aumentar o dosminuir velocidad de movimiento del carro
+#define JOY_GAIN    3             //Ganancia de Joystick para aumentar o dosminuir velocidad de movimiento del carro

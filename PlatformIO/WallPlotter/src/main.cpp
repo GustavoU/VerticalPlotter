@@ -160,13 +160,20 @@ void IRAM_ATTR onTimerJoy()
 void moveM1()
 {
   float mappedX = JoyXY.getMapped_X();
-  positions[0] += mappedX / RES_M1;
+  positions[0] += (mappedX / RES_M1)/JOY_GAIN;
 }
 
 void moveM2()
 {
   float mappedX = JoyXY.getMapped_X();
-  positions[1] += mappedX / RES_M2;
+  positions[1] += (mappedX / RES_M2)/JOY_GAIN;
+}
+
+void moveM12(){
+  float mappedX = JoyXY.getMapped_X();
+  positions[0] += (mappedX / RES_M1)/JOY_GAIN;
+  float mappedY = JoyXY.getMapped_Y();
+  positions[1] += (mappedY / RES_M2)/JOY_GAIN;
 }
 
 void configInitialMotorsPositions()
@@ -232,6 +239,9 @@ void handleShortPress()
   else if (HOMING == true)
   {
     homingState++;
+    if(homingState>3){
+      homingState=1;
+    }
     Serial.println(" b " + String(homingState));
   }
 }
@@ -323,12 +333,22 @@ void joystickTask(void *parameter)
       {
         posX_prev = POS_X;
         POS_X += mappedX*JOY_GAIN;
+         if(POS_X>LIM_SUP_X){
+          POS_X = LIM_SUP_X;
+        }else if(POS_X < LIM_INF_X){
+          POS_X=LIM_INF_X;
+        }
       }
       float mappedY = JoyXY.getMapped_Y();
       if (mappedY > DEADBAND_Y || mappedY < -DEADBAND_Y)
       {
         posY_prev = POS_Y;
         POS_Y += mappedY*JOY_GAIN;
+        if(POS_Y>LIM_SUP_Y){
+          POS_Y = LIM_SUP_Y;
+        }else if(POS_Y < LIM_INF_Y){
+          POS_Y=LIM_INF_Y;
+        }
       }
 
       if (COMMANDS_DISPLAY)
@@ -425,7 +445,7 @@ void setup()
   if (WiFi.waitForConnectResult() != WL_CONNECTED)
   {
     Serial.println("WiFi Failed!");
-    return;
+    //return;
   }
   Serial.println();
   Serial.print("IP Address: ");
@@ -492,7 +512,7 @@ void loop()
         moveM2();
         break;
       case 3:
-        moveM1();
+        moveM12();
         break;
       };
     }
