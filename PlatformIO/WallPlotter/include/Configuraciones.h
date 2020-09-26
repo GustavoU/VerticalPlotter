@@ -11,7 +11,7 @@
 #define FEEDBACK_M2 35      //Entrada de tren de pulsos de motor 2
 #define BOTON_JOY   23      //Entrada para boton de joystick
 #define LED_HOMING  25       //LED Indicador de homing encurso
-#define LED_SERVO   26       //LED Indicador de servo activado desactivado
+#define SERVO   26       //LED Indicador de servo activado desactivado
 //Parámetros 
 #define LIM_INF_X 50              //Límite inferior de posicion Eje X - Por debajo de este valor no se moverán más los motores
 #define LIM_INF_Y 50              //Límite inferior de posicion Eje Y
@@ -25,10 +25,14 @@
 #define CHANNEL_M2 2              //Canal PWM Motor 2
 #define MAXRPM_M1 300.0           //Máximas RPM Motor 1
 #define MAXRPM_M2 300.0           //Máximas RPM Motor 2
-#define HOMING_MAXRPM_M1 100.0    //Máximas RPM Motor 1
-#define HOMING_MAXRPM_M2 100.0    //Máximas RPM Motor 2
+#define NOM_SPEED_M1 MAXRPM_M1*0.75  //Velocidad nominal motor 1  
+#define NOM_SPEED_M2 MAXRPM_M2*0.75  //Velocidad nominal motor 2
+#define HOMING_MAXRPM_M1 100.0    //Máximas RPM para Homing Motor 1
+#define HOMING_MAXRPM_M2 100.0    //Máximas RPM para Homing Motor 2
 #define HOMING_X    250.0         //Posición de homing X
 #define HOMING_Y    50.0          //Posición de homing Y
+#define INI_X       250.0         //Posicion X inicial
+#define INI_Y       50.0          //Posicion Y inicial
 #define D1 10                     //Diametro de tambor/carrete de motor 1 en mm
 #define D2 10                     //Diametro de tambor/carrete de motor 1 en mm
 #define OFFSET_DISPLAY 1          //Informar por puerto serie mediciones  X-Y de Joystick
@@ -39,3 +43,4 @@
 #define JOY_CENTER_X 1875.0       //Valor obtenido de la posicion central X del joystick luego de primera calibración
 #define JOY_CENTER_Y 1585.0       //Valor obtenido de la posicion central Y del joystick luego de primera calibración
 #define JOY_GAIN    3             //Ganancia de Joystick para aumentar o dosminuir velocidad de movimiento del carro
+#define MICROSTEPS  32            //Micropasos utlizados

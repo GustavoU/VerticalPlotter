@@ -53,13 +53,15 @@ float FREQ_M1 = 0, FREQ_M2 = 0;
 float DUTY_M1 = 0, DUTY_M2 = 0;
 
 //Posicion inicial del carro (Eje Y positivo hacia abajo)
-float POS_X = 250.0, POS_Y = 10.0;
-float posX_prev = 250.0, posY_prev = 10.0;
+float POS_X = INI_X, POS_Y = INI_Y;
+float posX_prev = POS_X, posY_prev = POS_Y;
 
 //Variables para longitud de cuerda de los motores
 float L1 = 250.0, L2 = 250.0;
 float L1_PREV = 250.0, L2_PREV = 250.0;
 int L1_STEPS = 0, L2_STEPS = 0;
+
+int taskcnt = 0;  //Utilizada en funcion moveXY como contador
 
 void notFound(AsyncWebServerRequest *request)
 {
@@ -183,14 +185,14 @@ void configInitialMotorsPositions()
   L2 = sqrt(pow(POSX_M2 - POS_X, 2) + pow(POS_Y, 2));
 
   //Conversión de mm a pasos
-  positions[0] = L1 / RES_M1;
-  positions[1] = L2 / RES_M2;
+  positions[0] = (L1 / RES_M1)*MICROSTEPS;
+  positions[1] = (L2 / RES_M2)*MICROSTEPS;
 
   //Cargar posicion actual de los motores (aún cuando no sea verdadera, para evitar movimiento de los motores en un reinicio)
   motor1.setCurrentPosition(positions[0]);
   motor2.setCurrentPosition(positions[1]);
 }
-int taskcnt = 0;
+
 
 void moveXY()
 {
@@ -203,8 +205,8 @@ void moveXY()
   L2 = sqrt(pow(POSX_M2 - POS_X, 2) + pow(POS_Y, 2));
 
   //Conversion a pasos (posicion de motor)
-  float STEPS_L1 = L1 / RES_M1;
-  float STEPS_L2 = L2 / RES_M2;
+  float STEPS_L1 = (L1 / RES_M1)*MICROSTEPS;
+  float STEPS_L2 = (L2 / RES_M2)*MICROSTEPS;
 
   positions[0] = STEPS_L1;
   positions[1] = STEPS_L2;
@@ -222,19 +224,21 @@ void moveXY()
 
 void handleShortPress()
 {
-  Serial.print("pressed s");
+  Serial.print("Short press");
   if (HOMING == false)
   {
     //Toggle servo
-    if (digitalRead(LED_SERVO) == LOW)
+    if (digitalRead(SERVO) == LOW)
     {
-      digitalWrite(LED_SERVO, HIGH);
+      digitalWrite(SERVO, HIGH);
+      Serial.println("Servo ON");
     }
     else
     {
-      digitalWrite(LED_SERVO, LOW);
+      digitalWrite(SERVO, LOW);
+      Serial.println("Servo OFF");
     }
-    Serial.println(" a");
+    
   }
   else if (HOMING == true)
   {
@@ -242,44 +246,44 @@ void handleShortPress()
     if(homingState>3){
       homingState=1;
     }
-    Serial.println(" b " + String(homingState));
+    Serial.println("Homing state: " + String(homingState));
   }
 }
 void handleMediumPress()
 {
-  Serial.println("pressed m");
+  Serial.println("Medium press");
 }
 void handleLongPress()
 {
-
+  Serial.println("Long press");
   if (HOMING == false && (SD_RECORDING == false && SD_PLAYING == false))
   {
     HOMING = true;
     digitalWrite(LED_HOMING, HIGH);
+    digitalWrite(SERVO, LOW);   //Desactivar Servo
     homingState = 1;
-    Serial.println("aaa");
+    Serial.println("Homing");
   }
   else if (HOMING == true)
   {
     HOMING = false;
-    digitalWrite(LED_HOMING, LOW);
+    digitalWrite(LED_HOMING, LOW); 
     homingState = 0;
     POS_X = HOMING_X;
     POS_Y = HOMING_Y;
     configInitialMotorsPositions();
-    Serial.println("bbb");
+    Serial.println("End homing");
   }
 }
+
 void buttonHandler()
 {
-
   JoyXY.boton.prevState = JoyXY.boton.currentState;
   JoyXY.boton.currentState = digitalRead(BOTON_JOY);
 
   if (JoyXY.boton.currentState != JoyXY.boton.prevState)
   {
     delay(JoyXY.boton.debounce);
-    // update status in case of bounce
     JoyXY.boton.currentState = digitalRead(BOTON_JOY);
     if (JoyXY.boton.currentState == BTN_PRESSED)
     {
@@ -288,8 +292,7 @@ void buttonHandler()
 
     if (JoyXY.boton.currentState == BTN_NOT_PRESSED)
     {
-      // but no longer pressed, how long was it down?
-      unsigned long currentMillis = millis();
+      unsigned long currentMillis = millis(); //Tiempo transcurrido desde boton presionado
 
       if ((currentMillis - JoyXY.boton.counter >= SHORT_PRESS) && !(currentMillis - JoyXY.boton.counter >= MEDIUM_PRESS))
       {
@@ -316,7 +319,7 @@ void joystickTask(void *parameter)
   //Configuración de Timer 1 para ejecutar ciclos periódicos en tarea de joystick
   timerJoy = timerBegin(1, 80, true); //Timer 1, prescaler 80 -> 1MHz
   timerAttachInterrupt(timerJoy, &onTimerJoy, true);
-  timerAlarmWrite(timerJoy, 50000, true); //Desborde cada 50000 cuentas, interrupción cada 50 ms
+  timerAlarmWrite(timerJoy, 25000, true); //Desborde cada 25000 cuentas, interrupción cada 25 ms
   timerAlarmEnable(timerJoy);             //Funcion 'timerJoy' asociada a interrupción de timer1
 
   int cyclecnt = 0;
@@ -375,10 +378,18 @@ void joystickTask(void *parameter)
   }
 }
 
+void startup_serialprint(){
+  //Enviar por puerto serie todas las configuraciones cargadas
+  Serial.println("Velocidad máxima - M1: " + String(MAXRPM_M1) + " M2: " +String(MAXRPM_M2));
+  Serial.println("Velocidad nominal - M1: " + String(NOM_SPEED_M1) + " M2: " +String(NOM_SPEED_M2));
+  //...
+}
+
 void setup()
 {
 
   pinMode(22, OUTPUT); //Para depuración - Borrar luego
+  pinMode(27, OUTPUT); //Para depuración - Borrar luego
 
   pinMode(POT_X, INPUT);
   pinMode(POT_Y, INPUT);
@@ -390,20 +401,20 @@ void setup()
   pinMode(DIRPIN_M1, OUTPUT);
   pinMode(DIRPIN_M2, OUTPUT);
   pinMode(LED_HOMING, OUTPUT);
-  pinMode(LED_SERVO, OUTPUT);
+  pinMode(SERVO, OUTPUT);
 
   digitalWrite(LED_HOMING, LOW);
-  digitalWrite(LED_SERVO, LOW);
+  digitalWrite(SERVO, LOW);
 
   //Cnfiguración velocidad máxima de los motores
-  motor1.setMaxSpeed(MAXRPM_M1);
-  motor2.setMaxSpeed(MAXRPM_M2);
+  motor1.setMaxSpeed(MAXRPM_M1*MICROSTEPS);
+  motor2.setMaxSpeed(MAXRPM_M2*MICROSTEPS);
 
   configInitialMotorsPositions();
 
   //Configuración velocidad nominal de motores
-  motor1.setSpeed(250);
-  motor2.setSpeed(250);
+  motor1.setSpeed(NOM_SPEED_M1*MICROSTEPS);
+  motor2.setSpeed(NOM_SPEED_M2*MICROSTEPS);
 
   //Añadir motores a multistepper
   motores.addStepper(motor1);
@@ -440,12 +451,13 @@ void setup()
 
   Serial.begin(115200);
 
+  startup_serialprint();
+
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
   if (WiFi.waitForConnectResult() != WL_CONNECTED)
   {
     Serial.println("WiFi Failed!");
-    //return;
   }
   Serial.println();
   Serial.print("IP Address: ");
@@ -500,6 +512,7 @@ void loop()
   //la funcion 'runSpeedToPosition()' bloquea el hilo hasta cumplir con la posicion requerida
   if (flagMoveTimer)
   {
+    digitalWrite(27,HIGH);
     flagMoveTimer = false;
     if (HOMING == true)
     {
@@ -527,6 +540,7 @@ void loop()
 
     motores.moveTo(positions);
     motores.runSpeedToPosition();
+    digitalWrite(27,LOW);
   }
   delay(1);
 }
