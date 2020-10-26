@@ -14,3 +14,7 @@ Materials:
   - 1x microSD breakout board (SPI)
   
 ![wiring_diagram](https://github.com/GustavoU/VerticalPlotter/blob/master/ESP32%20VPLOTTER%20conexiones.jpg)
+![main_screen](https://github.com/GustavoU/VerticalPlotter/blob/master/main_screen.PNG)
+![homing_screen](https://github.com/GustavoU/VerticalPlotter/blob/master/homing_screen.PNG)
+![params_screen](https://github.com/GustavoU/VerticalPlotter/blob/master/params_screen.PNG)
+![canvas_screen](https://github.com/GustavoU/VerticalPlotter/blob/master/canvas_screen.PNG)
