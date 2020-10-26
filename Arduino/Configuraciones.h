@@ -5,8 +5,6 @@
 #define STEP_M2 17     //Salida de pulsos de pasos para motor 2
 #define DIRPIN_M1 4    //Salida de pulsos de dirección para motor 1
 #define DIRPIN_M2 2    //Salida de pulsos de dirección para motor 2
-#define ENDSTOP_X 32   //Entrada de fin de carrera de Eje X
-#define ENDSTOP_Y 33   //Entrada de fin de carrera de Eje Y
 #define FEEDBACK_M1 34 //Entrada de tren de pulsos de motor 1
 #define FEEDBACK_M2 35 //Entrada de tren de pulsos de motor 2
 #define BOTON_JOY 12   //Entrada para boton de joystick
