@@ -789,9 +789,11 @@ void joystickTask(void *parameter)
         if (!joystickHTML)
         {
           //En caso de que no hayan clientes se le da prioridad a los comandos de joystick físico
-          float mappedX = JoyXY.getMapped_X();
-          float mappedY = JoyXY.getMapped_Y();
-          updateXY(mappedX, mappedY);
+          if(ENABLE_JOYSTICK){
+            float mappedX = JoyXY.getMapped_X();
+            float mappedY = JoyXY.getMapped_Y();
+            updateXY(mappedX, mappedY);
+          }
         }
         else
         {
@@ -942,9 +944,11 @@ void joystickTask(void *parameter)
         }
         if (!joystickHTML)
         {
-          float mappedX = JoyXY.getMapped_X();
-          float mappedY = JoyXY.getMapped_Y();
-          updateXY(mappedX, mappedY);
+          if(ENABLE_JOYSTICK){
+            float mappedX = JoyXY.getMapped_X();
+            float mappedY = JoyXY.getMapped_Y();
+            updateXY(mappedX, mappedY);
+          }
         }
         else
         {
@@ -1401,8 +1405,6 @@ void setup()
   pinMode(POT_Y, INPUT);
   pinMode(FEEDBACK_M1, INPUT);
   pinMode(FEEDBACK_M2, INPUT);
-  pinMode(ENDSTOP_X, INPUT);
-  pinMode(ENDSTOP_Y, INPUT);
   pinMode(BOTON_JOY, INPUT);
   pinMode(DIRPIN_M1, OUTPUT);
   pinMode(DIRPIN_M2, OUTPUT);
