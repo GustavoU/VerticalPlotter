@@ -13,3 +13,4 @@ Materials:
   - 2x Pololu DRV8825 Stepper driver
   - 1x microSD breakout board (SPI)
   
+![wiring_diagram](https://github.com/GustavoU/VerticalPlotter/blob/master/ESP32%20VPLOTTER%20conexiones.jpg)
