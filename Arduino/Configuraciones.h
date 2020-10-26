@@ -39,6 +39,7 @@ float HEIGHT = 50;                               //Alto del canvas
 #define D1 20               //Diametro de tambor/carrete de motor 1 en mm
 #define D2 20               //Diametro de tambor/carrete de motor 1 en mm
 #define OFFSET_DISPLAY 0    //Informar por puerto serie mediciones  X-Y de Joystick
+#define ENABLE_JOYSTICK 0   //Habilitar joystick fisico
 #define COMMANDS_DISPLAY 0  //Informar por puerto serie posicion de carro, calculo de longitudes de cuerda y posicion de motores (en pasos)
 #define DEADBAND_X 0.1      //Banda muerta de eje X de Joystick para eliminar pequeños desplazamientos por ruido en la lectura
 #define DEADBAND_Y 0.1      //Banda muerta de eje Y de Joystick para eliminar pequeños desplazamientos por ruido en la lectura
